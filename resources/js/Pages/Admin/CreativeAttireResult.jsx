@@ -4,7 +4,11 @@ import React from "react";
 import PageLayout from "@/Layouts/PageLayout";
 import ResultTable from "./Partials/ResultTable";
 
-const SwimWearResult = ({ categoryName, candidates = [], judgeOrder = [] }) => {
+const CreativeAttiveResult = ({
+    categoryName,
+    candidates = [],
+    judgeOrder = [],
+}) => {
     return (
         <PageLayout>
             <h2 className="text-white text-xl font-bold mb-6 flex justify-center mt-6">
@@ -20,4 +24,4 @@ const SwimWearResult = ({ categoryName, candidates = [], judgeOrder = [] }) => {
     );
 };
 
-export default SwimWearResult;
+export default CreativeAttiveResult;

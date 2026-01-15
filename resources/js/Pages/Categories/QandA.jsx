@@ -7,7 +7,7 @@ import CandidateGrid from "./Partials/CandidateGrid";
 import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const Swimwear = ({ candidates }) => {
+const QandA = ({ candidates }) => {
     const judgeId = usePage().props.auth.user.id;
     const scoresRef = useRef({});
 
@@ -43,7 +43,7 @@ const Swimwear = ({ candidates }) => {
         }
 
         router.post(
-            route("swim_wear.store"),
+            route("q_and_a.store"),
             {
                 judge_id: judgeId,
                 scores: filteredScores,
@@ -66,12 +66,13 @@ const Swimwear = ({ candidates }) => {
             <div className="w-full my-10 px-4 flex flex-col items-center gap-6">
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-neutral-200 text-center mb-6">
-                        Swim Wear
+                        Q & A
                     </h2>
                 </div>
+
                 <CandidateGrid
                     candidates={candidates}
-                    maxScore={10}
+                    maxScore={20} // You can adjust max score for Q&A
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
@@ -89,4 +90,4 @@ const Swimwear = ({ candidates }) => {
     );
 };
 
-export default Swimwear;
+export default QandA;

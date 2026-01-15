@@ -13,15 +13,17 @@ class TopFiveSelectionScore extends Model
     protected $fillable = [
         'candidate_id',
         'judge_id',
-        'production_number',
+        'creative_attire',
         'casual_wear',
-        'swim_wear', 
-        'formal_wear',
-        'closed_door_interview',
-        'total_score',
+        'swim_wear',
+        'talent',
+        'gown',
+        'q_and_a',
+        'beauty',
+        'total_scores',
     ];
 
-     public function candidate()
+    public function candidate()
     {
         return $this->belongsTo(Candidate::class);
     }
@@ -29,6 +31,5 @@ class TopFiveSelectionScore extends Model
     public function judge()
     {
         return $this->belongsTo(User::class, 'judge_id');
-    }    
-    
+    }
 }

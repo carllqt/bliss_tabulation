@@ -39,23 +39,59 @@ class CandidateController extends Controller
         ]);
     }
 
-    public function production_number()
+    public function creative_attire()
     {
-        return $this->renderCategory('Categories/ProductionNumber', 'production_number');
+        return $this->renderCategory(
+            'Categories/CreativeAttire',
+            'creative_attire'
+        );
     }
 
     public function casual_wear()
     {
-        return $this->renderCategory('Categories/CasualWear', 'casual_wear');
+        return $this->renderCategory(
+            'Categories/CasualWear',
+            'casual_wear'
+        );
     }
 
     public function swim_wear()
     {
-        return $this->renderCategory('Categories/SwimWear', 'swim_wear');
+        return $this->renderCategory(
+            'Categories/SwimWear',
+            'swim_wear'
+        );
     }
 
-    public function formal_wear()
+    public function talent()
     {
-        return $this->renderCategory('Categories/FormalWear', 'formal_wear');
+        return $this->renderCategory(
+            'Categories/Talent',
+            'talent'
+        );
+    }
+
+    public function gown()
+    {
+        return $this->renderCategory(
+            'Categories/Gown',
+            'gown'
+        );
+    }
+
+    public function q_and_a()
+    {
+        return $this->renderCategory(
+            'Categories/QandA',
+            'q_and_a'
+        );
+    }
+
+    public function beauty()
+    {
+        return $this->renderCategory(
+            'Categories/Beauty',
+            'beauty'
+        );
     }
 }

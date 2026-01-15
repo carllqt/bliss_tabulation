@@ -2,104 +2,70 @@
 
 namespace App\Services;
 
-use App\Models\TopFiveSelectionScore;
 use App\Models\Candidate;
+use App\Models\TopFiveSelectionScore;
 
 class TopFiveSelectionService
 {
-    protected $categories = [
-        'production_number',
+    protected array $categories = [
+        'creative_attire',
         'casual_wear',
         'swim_wear',
-        'formal_wear',
-        'closed_door_interview',
+        'talent',
+        'gown',
+        'q_and_a',
+        'beauty',
     ];
 
-    public function getResultsPerCategory(string $category)
+    protected array $judgeOrder = [
+        'judge_1',
+        'judge_2',
+        'judge_3',
+        'judge_4',
+        'judge_5',
+    ];
+
+    public function getResultsPerCategory(string $category): array
     {
-        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5'];
-
-        // Get all candidates
-        $maleCandidatesList = Candidate::where('gender', 'male')->get();
-        $femaleCandidatesList = Candidate::where('gender', 'female')->get();
-
-        // Load all scores at once
+        $candidates = Candidate::all();
         $scores = TopFiveSelectionScore::with('judge')->get();
 
-        $maleCandidates = $this->processCandidates($maleCandidatesList, $scores, $category, $judgeOrder);
-        $femaleCandidates = $this->processCandidates($femaleCandidatesList, $scores, $category, $judgeOrder);
-
-        return [
-            'maleCandidates' => $maleCandidates,
-            'femaleCandidates' => $femaleCandidates,
-            'judgeOrder' => $judgeOrder,
-        ];
-    }
-
-    protected function processCandidates($candidatesList, $scores, $category, $judgeOrder)
-    {
         $processed = [];
-        $count = 0;
 
-        foreach ($candidatesList as $candidate) {
-            $count++;
+        foreach ($candidates as $candidate) {
+            $judgeScores = array_fill_keys($this->judgeOrder, 0);
 
-            // Initialize all judges with 0
-            $candidateScores = array_fill_keys($judgeOrder, 0);
-
-            // Fill in scores if they exist
-            $candidateScoresFromDB = $scores->where('candidate_id', $candidate->id);
-            foreach ($candidateScoresFromDB as $score) {
-                if (in_array($score->judge->name, $judgeOrder)) {
-                    $candidateScores[$score->judge->name] = $score->{$category} ?? 0;
+            foreach ($scores->where('candidate_id', $candidate->id) as $score) {
+                if (in_array($score->judge->name, $this->judgeOrder)) {
+                    $judgeScores[$score->judge->name] = $score->{$category} ?? 0;
                 }
             }
 
             $processed[] = [
                 'candidate' => $candidate,
-                'scores' => $candidateScores,
-                'total' => round(array_sum($candidateScores), 2),
-                'rank' => 0,
-                'candidate_number' => $count,
+                'scores'    => $judgeScores,
+                'total'     => round(array_sum($judgeScores), 2),
+                'rank'      => 0,
             ];
         }
 
-        return $this->assignRanking($processed);
-    }
-
-    public function getTopFiveSelectionResults()
-    {
-        // Get all candidates
-        $maleCandidatesList = Candidate::where('gender', 'male')->get();
-        $femaleCandidatesList = Candidate::where('gender', 'female')->get();
-
-        // Load all scores at once
-        $scores = TopFiveSelectionScore::with('judge')->get();
-
-        $maleCandidates = $this->processTotalPerCategory($maleCandidatesList, $scores);
-        $femaleCandidates = $this->processTotalPerCategory($femaleCandidatesList, $scores);
-
         return [
-            'maleCandidates' => $maleCandidates,
-            'femaleCandidates' => $femaleCandidates,
-            'categories' => $this->categories,
+            'candidates' => $this->assignRanking($processed),
+            'judgeOrder' => $this->judgeOrder,
         ];
     }
 
-    protected function processTotalPerCategory($candidatesList, $scores)
+    public function getTopFiveSelectionResults(): array
     {
+        $candidates = Candidate::all();
+        $scores = TopFiveSelectionScore::with('judge')->get();
+
         $processed = [];
-        $count = 0;
 
-        foreach ($candidatesList as $candidate) {
-            $count++;
-
-            // Initialize all categories with 0
+        foreach ($candidates as $candidate) {
             $categoryTotals = array_fill_keys($this->categories, 0);
 
-            // Sum all judges' scores per category
-            $candidateScores = $scores->where('candidate_id', $candidate->id);
-            foreach ($candidateScores as $score) {
+            foreach ($scores->where('candidate_id', $candidate->id) as $score) {
                 foreach ($this->categories as $cat) {
                     $categoryTotals[$cat] += $score->{$cat} ?? 0;
                 }
@@ -107,14 +73,16 @@ class TopFiveSelectionService
 
             $processed[] = [
                 'candidate' => $candidate,
-                'scores' => $categoryTotals,
-                'total' => round(array_sum($categoryTotals), 2),
-                'rank' => 0,
-                'candidate_number' => $count,
+                'scores'    => $categoryTotals,
+                'total'     => round(array_sum($categoryTotals), 2),
+                'rank'      => 0,
             ];
         }
 
-        return $this->assignRanking($processed);
+        return [
+            'candidates' => $this->assignRanking($processed),
+            'categories' => $this->categories,
+        ];
     }
 
     private function assignRanking(array $candidates): array
@@ -124,16 +92,52 @@ class TopFiveSelectionService
         $rank = 1;
         $lastTotal = null;
 
-        foreach ($candidates as $index => &$c) {
-            if ($lastTotal !== null && $c['total'] === $lastTotal) {
-                $c['rank'] = $rank;
+        foreach ($candidates as $index => &$candidate) {
+            if ($lastTotal !== null && $candidate['total'] === $lastTotal) {
+                $candidate['rank'] = $rank;
             } else {
                 $rank = $index + 1;
-                $c['rank'] = $rank;
-                $lastTotal = $c['total'];
+                $candidate['rank'] = $rank;
+                $lastTotal = $candidate['total'];
             }
         }
 
         return $candidates;
+    }
+
+    public function getTopFiveAccumulative(?array $candidateIds = null): array
+    {
+        // Get all candidates or filter by given IDs
+        $candidates = Candidate::when($candidateIds, fn($q) => $q->whereIn('id', $candidateIds))->get();
+
+        // Get all scores
+        $scores = TopFiveSelectionScore::with('judge')->get();
+
+        $topFiveAccumulative = [];
+
+        foreach ($candidates as $candidate) {
+            $categoryTotals = array_fill_keys($this->categories, 0);
+
+            // Sum all categories for this candidate
+            foreach ($scores->where('candidate_id', $candidate->id) as $score) {
+                foreach ($this->categories as $cat) {
+                    $categoryTotals[$cat] += $score->{$cat} ?? 0;
+                }
+            }
+
+            $total = array_sum($categoryTotals);
+            $accumulative = $total * 0.5; // 50%
+
+            $topFiveAccumulative[] = [
+                'candidate'   => $candidate,
+                'total'       => $total,
+                'accumulative' => round($accumulative, 2),
+            ];
+        }
+        return collect($topFiveAccumulative)
+            ->sortByDesc('total')
+            ->take(5)
+            ->values()
+            ->toArray();
     }
 }

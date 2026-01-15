@@ -19,11 +19,13 @@ class TopFiveSelectionScoreRepository
 
         // Recalculate the total for all categories
         $record->total_scores =
-            ($record->production_number ?? 0) +
+            ($record->creative_attire ?? 0) +
             ($record->casual_wear ?? 0) +
             ($record->swim_wear ?? 0) +
-            ($record->formal_wear ?? 0) +
-            ($record->closed_door_interview ?? 0);
+            ($record->talent ?? 0) +
+            ($record->gown ?? 0) +
+            ($record->q_and_a ?? 0) +
+            ($record->beauty ?? 0);
 
         $record->save();
 

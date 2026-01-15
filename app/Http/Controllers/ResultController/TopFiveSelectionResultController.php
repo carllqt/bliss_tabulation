@@ -5,8 +5,8 @@ namespace App\Http\Controllers\ResultController;
 use App\Http\Controllers\Controller;
 use App\Services\TopFiveSelectionService;
 use App\Models\TopFiveCandidates;
-use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TopFiveSelectionResultController extends Controller
 {
@@ -17,91 +17,106 @@ class TopFiveSelectionResultController extends Controller
         $this->service = $service;
     }
 
-    public function productionNumberResults()
+    private function renderCategory(string $category, string $name, string $view)
     {
-        $results = $this->service->getResultsPerCategory('production_number');
+        $results = $this->service->getResultsPerCategory($category);
 
-        return Inertia::render('Admin/ProductionNumberResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Production Number',
+        return Inertia::render($view, [
+            'candidates'   => $results['candidates'],
+            'judgeOrder'   => $results['judgeOrder'],
+            'categoryName' => $name,
         ]);
+    }
+
+    public function creativeAttireResults()
+    {
+        return $this->renderCategory(
+            'creative_attire',
+            'Creative Attire',
+            'Admin/CreativeAttireResult'
+        );
     }
 
     public function casualWearResults()
     {
-        $results = $this->service->getResultsPerCategory('casual_wear');
-
-        return Inertia::render('Admin/CasualWearResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Casual Wear',
-        ]);
+        return $this->renderCategory(
+            'casual_wear',
+            'Casual Wear',
+            'Admin/CasualWearResult'
+        );
     }
 
     public function swimWearResults()
     {
-        $results = $this->service->getResultsPerCategory('swim_wear');
-
-        return Inertia::render('Admin/SwimWearResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Swim Wear',
-        ]);
+        return $this->renderCategory(
+            'swim_wear',
+            'Swim Wear',
+            'Admin/SwimWearResult'
+        );
     }
 
-    public function formalWearResults()
+    public function talentResults()
     {
-        $results = $this->service->getResultsPerCategory('formal_wear');
-
-        return Inertia::render('Admin/FormalWearResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Formal Wear',
-        ]);
+        return $this->renderCategory(
+            'talent',
+            'Talent',
+            'Admin/TalentResult'
+        );
     }
-    public function closedDoorInterviewResults()
+
+    public function gownResults()
     {
-        $results = $this->service->getResultsPerCategory('closed_door_interview');
-
-        return Inertia::render('Admin/ClosedDoorInterviewResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Closed Door Interview',
-        ]);
+        return $this->renderCategory(
+            'gown',
+            'Gown',
+            'Admin/GownResult'
+        );
     }
+
+    public function qAndAResults()
+    {
+        return $this->renderCategory(
+            'q_and_a',
+            'Q & A',
+            'Admin/QandAResult'
+        );
+    }
+
+    public function beautyResults()
+    {
+        return $this->renderCategory(
+            'beauty',
+            'Beauty',
+            'Admin/BeautyResult'
+        );
+    }
+
     public function topFiveSelectionResults()
     {
         $results = $this->service->getTopFiveSelectionResults();
 
         return Inertia::render('Admin/TopFiveSelectionResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'categories' => $results['categories'],
+            'candidates'   => $results['candidates'],
+            'categories'   => $results['categories'],
             'categoryName' => 'Top Five Selection',
         ]);
     }
 
-    public function setTopFive(Request $request)
+    public function setTopFive(TopFiveSelectionService $service)
     {
-        $request->validate([
-            'candidate_ids' => 'required|array|min:1',
-            'candidate_ids.*' => 'exists:candidates,id',
-        ]);
-
+        // Clear previous top 5 candidates
         TopFiveCandidates::query()->delete();
 
-        foreach ($request->candidate_ids as $candidateId) {
+        // Get top 5 candidates with accumulative 50%
+        $topFive = $service->getTopFiveAccumulative();
+
+        foreach ($topFive as $data) {
             TopFiveCandidates::create([
-                'candidate_id' => $candidateId,
+                'candidate_id' => $data['candidate']->id,
+                'accumulative' => $data['accumulative'],
             ]);
         }
 
-        return redirect()->back()->with('success', 'Top 5 Male & Female saved successfully!');
+        return redirect()->back()->with('success', 'Top 5 candidates saved with accumulative scores successfully!');
     }
 }

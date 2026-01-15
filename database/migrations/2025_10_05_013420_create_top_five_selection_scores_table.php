@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('candidate_id')->constrained('candidates')->onDelete('cascade');
             $table->foreignId('judge_id')->constrained('users')->onDelete('cascade');
-            $table->decimal('production_number', 5, 2)->nullable();
+            $table->decimal('creative_attire', 5, 2)->nullable();
             $table->decimal('casual_wear', 5, 2)->nullable();
             $table->decimal('swim_wear', 5, 2)->nullable();
-            $table->decimal('formal_wear', 5, 2)->nullable();
-            $table->decimal('closed_door_interview', 5, 2)->nullable();
+            $table->decimal('talent', 5, 2)->nullable();
+            $table->decimal('gown', 5, 2)->nullable();
+            $table->decimal('q_and_a', 5, 2)->nullable();
+            $table->decimal('beauty', 5, 2)->nullable();
             $table->decimal('total_scores', 5, 2)->nullable();
             $table->timestamps();
 

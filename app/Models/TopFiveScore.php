@@ -13,9 +13,7 @@ class TopFiveScore extends Model
     protected $fillable = [
         'top_five_id',
         'judge_id',
-        'face_and_figure',
-        'delivery',
-        'overall_appeal',
+        'final_q_and_a',
         'total_score',
     ];
 

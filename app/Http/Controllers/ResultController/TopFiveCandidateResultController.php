@@ -16,58 +16,30 @@ class TopFiveCandidateResultController extends Controller
     }
 
     /**
-     * Display results for Beauty of the Face and Figure category
+     * FINAL Q & A RESULTS (single category, no gender)
      */
-    public function beautyFaceResults()
+    public function finalQAResults()
     {
-        $results = $this->service->getResultsPerCategory('face_and_figure');
+        $results = $this->service->getResultsPerCategory('final_q_and_a');
 
-        return Inertia::render('Admin/TopFiveCategories/BeautyFaceFigureResult', [
-            'maleCandidates'   => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Beauty of the Face and Figure',
+        return Inertia::render('Admin/TopFiveCategories/FinalQAResult', [
+            'candidates'   => $results['candidates'],
+            'judgeOrder'   => $results['judgeOrder'],
+            'categoryName' => 'Final Q & A',
         ]);
     }
 
     /**
-     * Display results for Delivery category
+     * TOTAL COMBINED RESULTS (no gender)
      */
-    public function deliveryResults()
-    {
-        $results = $this->service->getResultsPerCategory('delivery');
-
-        return Inertia::render('Admin/TopFiveCategories/DeliveryResult', [
-            'maleCandidates'   => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Delivery',
-        ]);
-    }
-
-    /**
-     * Display results for Over-all Appeal / X-factor category
-     */
-    public function overallAppealResults()
-    {
-        $results = $this->service->getResultsPerCategory('overall_appeal');
-
-        return Inertia::render('Admin/TopFiveCategories/OverallAppealResult', [
-            'maleCandidates'   => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Over-all Appeal / X-factor',
-        ]);
-    }
     public function totalResults()
     {
         $results = $this->service->getTotalResults();
 
         return Inertia::render('Admin/TopFiveCategories/TotalResults', [
-            'maleCandidates'   => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Total Combined Scores',
+            'candidates'   => $results['candidates'],
+            'judgeOrder'   => $results['judgeOrder'],
+            'categoryName' => 'Total Combined Scores',
         ]);
     }
 }

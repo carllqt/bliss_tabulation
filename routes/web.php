@@ -27,60 +27,93 @@ Route::get('/dashboard', function () {
 
 // Categories Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/production_number', [CandidateController::class, 'production_number'])->name('production_number');
-    Route::get('/casual_wear', [CandidateController::class, 'casual_wear'])->name('casual_wear');
-    Route::get('/swim_wear', [CandidateController::class, 'swim_wear'])->name('swim_wear');
-    Route::get('/formal_wear', [CandidateController::class, 'formal_wear'])->name('formal_wear');
+    Route::get('/creative-attire', [CandidateController::class, 'creative_attire'])
+        ->name('creative_attire');
+
+    Route::get('/casual-wear', [CandidateController::class, 'casual_wear'])
+        ->name('casual_wear');
+
+    Route::get('/swim-wear', [CandidateController::class, 'swim_wear'])
+        ->name('swim_wear');
+
+    Route::get('/talent', [CandidateController::class, 'talent'])
+        ->name('talent');
+
+    Route::get('/gown', [CandidateController::class, 'gown'])
+        ->name('gown');
+
+    Route::get('/q-and-a', [CandidateController::class, 'q_and_a'])
+        ->name('q_and_a');
+
+    Route::get('/beauty', [CandidateController::class, 'beauty'])
+        ->name('beauty');
 });
 
-// Scores Routes (Top 5 Selection)
+
 Route::middleware('auth')->group(function () {
-    Route::post('/production_number/scores', [TopFiveSelectionScoreController::class, 'production_number_store'])
-        ->name('production_number.store');
-    Route::post('/casual_wear/scores', [TopFiveSelectionScoreController::class, 'casual_wear_store'])
+    Route::post('/creative-attire/scores', [TopFiveSelectionScoreController::class, 'creative_attire_store'])
+        ->name('creative_attire.store');
+
+    Route::post('/casual-wear/scores', [TopFiveSelectionScoreController::class, 'casual_wear_store'])
         ->name('casual_wear.store');
-    Route::post('/swim_wear/scores', [TopFiveSelectionScoreController::class, 'swim_wear_store'])
+
+    Route::post('/swim-wear/scores', [TopFiveSelectionScoreController::class, 'swim_wear_store'])
         ->name('swim_wear.store');
-    Route::post('/formal_wear/scores', [TopFiveSelectionScoreController::class, 'formal_wear_store'])
-        ->name('formal_wear.store');
+
+    Route::post('/talent/scores', [TopFiveSelectionScoreController::class, 'talent_store'])
+        ->name('talent.store');
+
+    Route::post('/gown/scores', [TopFiveSelectionScoreController::class, 'gown_store'])
+        ->name('gown.store');
+
+    Route::post('/q-and-a/scores', [TopFiveSelectionScoreController::class, 'q_and_a_store'])
+        ->name('q_and_a.store');
+
+    Route::post('/beauty/scores', [TopFiveSelectionScoreController::class, 'beauty_store'])
+        ->name('beauty.store');
 });
+
 
 // Admin Results Routes (Top 5 Selection)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/admin/production_number', [TopFiveSelectionResultController::class, 'productionNumberResults'])
-        ->name('admin.production_number');
-    Route::get('/admin/casual_wear', [TopFiveSelectionResultController::class, 'casualWearResults'])
+    Route::get('/admin/creative-attire', [TopFiveSelectionResultController::class, 'creativeAttireResults'])
+        ->name('admin.creative_attire');
+
+    Route::get('/admin/casual-wear', [TopFiveSelectionResultController::class, 'casualWearResults'])
         ->name('admin.casual_wear');
-    Route::get('/admin/swim_wear', [TopFiveSelectionResultController::class, 'swimWearResults'])
+
+    Route::get('/admin/swim-wear', [TopFiveSelectionResultController::class, 'swimWearResults'])
         ->name('admin.swim_wear');
-    Route::get('/admin/formal_wear', [TopFiveSelectionResultController::class, 'formalWearResults'])
-        ->name('admin.formal_wear');
-    Route::get('/admin/closed_door_interview', [TopFiveSelectionResultController::class, 'closedDoorInterviewResults'])
-        ->name('admin.closed_door_interview');
-    Route::get('/admin/top_five_selection_result', [TopFiveSelectionResultController::class, 'topFiveSelectionResults'])
+
+    Route::get('/admin/talent', [TopFiveSelectionResultController::class, 'talentResults'])
+        ->name('admin.talent');
+
+    Route::get('/admin/gown', [TopFiveSelectionResultController::class, 'gownResults'])
+        ->name('admin.gown');
+
+    Route::get('/admin/q-and-a', [TopFiveSelectionResultController::class, 'qAndAResults'])
+        ->name('admin.q_and_a');
+
+    Route::get('/admin/beauty', [TopFiveSelectionResultController::class, 'beautyResults'])
+        ->name('admin.beauty');
+
+    // Optional: Top Five selection summary
+    Route::get('/admin/top-five-selection', [TopFiveSelectionResultController::class, 'topFiveSelectionResults'])
         ->name('admin.top_five_selection');
 });
+
 
 // Category Routes (Top 5 Finalists)
 Route::middleware('auth')->group(function () {
 
     // Display Routes
-    Route::get('/beauty_face_figure', [TopFiveCandidateController::class, 'faceAndFigure'])
-        ->name('beauty_face_figure');
-    Route::get('/delivery', [TopFiveCandidateController::class, 'delivery'])
-        ->name('delivery');
-    Route::get('/overall_appeal', [TopFiveCandidateController::class, 'overallAppeal'])
-        ->name('overall_appeal');
+    Route::get('/final_q_and_a', [TopFiveCandidateController::class, 'final_q_and_a'])
+        ->name('final_q_and_a');
 
     // Store Routes
-    Route::post('/beauty_face_figure/store', [TopFiveScoreController::class, 'faceAndFigureStore'])
-        ->name('beauty_face_figure.store');
-    Route::post('/delivery/store', [TopFiveScoreController::class, 'deliveryStore'])
-        ->name('delivery.store');
-    Route::post('/overall_appeal/store', [TopFiveScoreController::class, 'overallAppealStore'])
-        ->name('overall_appeal.store');
+    Route::post('/final-q-and-a/store', [TopFiveScoreController::class, 'finalQAStore'])
+        ->name('final_q_and_a.store');
 });
-
 
 // Admin Set Top 5 Candidates Routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -91,12 +124,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 //Admin Top 5 Candidates Result Routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/admin/beauty_face_figure', [TopFiveCandidateResultController::class, 'beautyFaceResults'])
-        ->name('admin.beauty_face_figure');
-    Route::get('/admin/delivery', [TopFiveCandidateResultController::class, 'deliveryResults'])
-        ->name('admin.delivery');
-    Route::get('/admin/overall_appeal', [TopFiveCandidateResultController::class, 'overallAppealResults'])
-        ->name('admin.overall_appeal');
+    Route::get(
+        '/final_q_and_a/results',
+        [TopFiveCandidateResultController::class, 'finalQAResults']
+    )->name('admin.final_q_and_a');
     Route::get('/admin/total_results', [TopFiveCandidateResultController::class, 'totalResults'])
         ->name('admin.top_five_finalist');
 });

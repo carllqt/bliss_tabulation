@@ -39,14 +39,13 @@ export default function SidebarMain({ children }) {
         }
     }, [user]);
 
-    // Main links — dynamic based on user role
     const mainLinks =
         user?.role === "admin"
             ? [
                   {
-                      label: "Production Number",
+                      label: "Creative Attire",
                       icon: <ListChecks />,
-                      route: "admin.production_number", // ✅ Use route name
+                      route: "admin.creative_attire",
                   },
                   {
                       label: "Casual Wear",
@@ -59,37 +58,66 @@ export default function SidebarMain({ children }) {
                       route: "admin.swim_wear",
                   },
                   {
-                      label: "Formal Wear",
+                      label: "Talent",
                       icon: <Award />,
-                      route: "admin.formal_wear",
+                      route: "admin.talent",
                   },
                   {
-                      label: "Closed Door Interview",
-                      icon: <User />, // choose an icon, e.g., User
-                      route: "admin.closed_door_interview",
+                      label: "Gown",
+                      icon: <Award />,
+                      route: "admin.gown",
                   },
                   {
-                      label: "Top Five Selection ",
-                      icon: <Trophy />, // choose an icon, e.g., Star
+                      label: "Q & A",
+                      icon: <User />,
+                      route: "admin.q_and_a",
+                  },
+                  {
+                      label: "Beauty",
+                      icon: <Award />,
+                      route: "admin.beauty",
+                  },
+                  {
+                      label: "Top Five Selection",
+                      icon: <Trophy />,
                       route: "admin.top_five_selection",
                   },
               ]
             : [
                   {
-                      label: "Production Number",
+                      label: "Creative Attire",
                       icon: <ListChecks />,
-                      route: "production_number",
+                      route: "creative_attire",
                   },
                   {
                       label: "Casual Wear",
                       icon: <Shirt />,
                       route: "casual_wear",
                   },
-                  { label: "Swim Wear", icon: <Droplet />, route: "swim_wear" },
                   {
-                      label: "Formal Wear",
+                      label: "Swim Wear",
+                      icon: <Droplet />,
+                      route: "swim_wear",
+                  },
+                  {
+                      label: "Talent",
                       icon: <Award />,
-                      route: "formal_wear",
+                      route: "talent",
+                  },
+                  {
+                      label: "Gown",
+                      icon: <Award />,
+                      route: "gown",
+                  },
+                  {
+                      label: "Q & A",
+                      icon: <Award />,
+                      route: "q_and_a",
+                  },
+                  {
+                      label: "Beauty",
+                      icon: <Award />,
+                      route: "beauty",
                   },
               ];
 
@@ -97,19 +125,14 @@ export default function SidebarMain({ children }) {
         user?.role === "admin"
             ? [
                   {
-                      label: "Beauty of the Face and Figure",
+                      label: "Accumulative Scoring",
                       icon: <User />,
-                      route: "admin.beauty_face_figure",
+                      route: "admin.acumulative_scoring",
                   },
                   {
-                      label: "Delivery",
+                      label: "Final Q & A",
                       icon: <Package />,
-                      route: "admin.delivery",
-                  },
-                  {
-                      label: "Over-all Appeal / X-factor",
-                      icon: <Star />,
-                      route: "admin.overall_appeal",
+                      route: "admin.final_q_and_a",
                   },
                   {
                       label: "Top Five Finalist",
@@ -119,15 +142,9 @@ export default function SidebarMain({ children }) {
               ]
             : [
                   {
-                      label: "Beauty of the Face and Figure",
-                      icon: <User />,
-                      route: "beauty_face_figure",
-                  },
-                  { label: "Delivery", icon: <Package />, route: "delivery" },
-                  {
-                      label: "Over-all Appeal / X-factor",
-                      icon: <Star />,
-                      route: "overall_appeal",
+                      label: "Final Q & A",
+                      icon: <Package />,
+                      route: "final_q_and_a",
                   },
               ];
 

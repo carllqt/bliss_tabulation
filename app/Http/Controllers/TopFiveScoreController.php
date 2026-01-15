@@ -15,18 +15,15 @@ class TopFiveScoreController extends Controller
         $this->scores = $scores;
     }
 
-    /**
-     * Generic function to store scores for a given category
-     */
-    private function storeScores(Request $request, string $category)
+    public function finalQAStore(Request $request)
     {
         $request->validate([
             'judge_id' => 'required|exists:users,id',
-            'scores' => 'required|array',
+            'scores'   => 'required|array',
         ]);
 
-        $judgeId = $request->input('judge_id');
-        $scores = $request->input('scores');
+        $judgeId = $request->judge_id;
+        $scores  = $request->scores;
 
         foreach ($scores as $candidateId => $scoreValue) {
             $topFive = TopFiveCandidates::where('candidate_id', $candidateId)->first();
@@ -35,35 +32,14 @@ class TopFiveScoreController extends Controller
                 continue;
             }
 
-            $topFiveId = $topFive->id;
-
-            $this->scores->updateOrCreateScore($judgeId, $topFiveId, $category, $scoreValue);
+            $this->scores->updateOrCreateScore(
+                $judgeId,
+                $topFive->id,
+                'final_q_and_a',
+                $scoreValue
+            );
         }
 
-        return back();
-    }
-
-    /**
-     * Store Face & Figure scores
-     */
-    public function faceAndFigureStore(Request $request)
-    {
-        return $this->storeScores($request, 'face_and_figure');
-    }
-
-    /**
-     * Store Delivery scores
-     */
-    public function deliveryStore(Request $request)
-    {
-        return $this->storeScores($request, 'delivery');
-    }
-
-    /**
-     * Store Overall Appeal scores
-     */
-    public function overallAppealStore(Request $request)
-    {
-        return $this->storeScores($request, 'overall_appeal');
+        return back()->with('success', 'Final Q & A scores saved successfully.');
     }
 }

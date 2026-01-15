@@ -10,63 +10,37 @@ use Inertia\Inertia;
 class TopFiveCandidateController extends Controller
 {
     /**
-     * Render Top Five candidates with existing scores for a specific category
+     * Render Top Five candidates for Final Q & A
      */
-    protected function renderCategory(string $view, string $categoryField)
+    public function final_q_and_a()
     {
         $judgeId = Auth::id();
 
         $candidates = TopFiveCandidates::with('candidate')
             ->get()
-            ->sortBy(function ($item) {
-                return $item->candidate->candidate_number ?? 0;
-            })
+            ->sortBy(fn($item) => $item->candidate->candidate_number ?? 0)
             ->values()
-            ->map(function ($item) use ($judgeId, $categoryField) {
-                // Fetch score via top_five_id
-                $score = TopFiveScore::where('top_five_id', $item->id)
-                    ->where('judge_id', $judgeId)
-                    ->first();
+            ->map(fn($item) => [
+                'id' => $item->id,
+                'candidate_number' => $item->candidate->candidate_number ?? null,
+                'candidate_id' => $item->candidate_id,
+                'profile_img' => $item->candidate->profile_img ?? null,
+                'first_name' => $item->candidate->first_name ?? null,
+                'last_name' => $item->candidate->last_name ?? null,
+                'course' => $item->candidate->course ?? null,
+                'final_q_and_a' => optional(
+                    TopFiveScore::where('top_five_id', $item->id)
+                        ->where('judge_id', $judgeId)
+                        ->first()
+                )->final_q_and_a,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ]);
 
-                return [
-                    'id' => $item->id,
-                    'candidate_number' => $item->candidate->candidate_number ?? null,
-                    'candidate_id' => $item->candidate_id,
-                    'profile_img' => $item->candidate->profile_img ?? null,
-                    'first_name' => $item->candidate->first_name ?? null,
-                    'last_name' => $item->candidate->last_name ?? null,
-                    'course' => $item->candidate->course ?? null,
-                    'gender' => $item->candidate->gender ?? null,
-                    $categoryField => $score->{$categoryField} ?? null,
-                    'has_existing_score' => [
-                        'face_and_figure' => $score->face_and_figure ?? null,
-                        'delivery' => $score->delivery ?? null,
-                        'overall_appeal' => $score->overall_appeal ?? null,
-                    ],
-                    'created_at' => $item->created_at,
-                    'updated_at' => $item->updated_at,
-                ];
-            });
-
-        return Inertia::render($view, [
+        return Inertia::render('Categories/TopFiveCategories/FinalQA', [
             'candidates' => $candidates,
-            'category' => $categoryField,
+            'categoryName' => 'Final Q and A',
+            'category' => 'final_q_and_a',
         ]);
-    }
-
-
-    public function faceAndFigure()
-    {
-        return $this->renderCategory('Categories/TopFiveFinalist/BeautyFaceFigure', 'face_and_figure');
-    }
-
-    public function delivery()
-    {
-        return $this->renderCategory('Categories/TopFiveFinalist/Delivery', 'delivery');
-    }
-
-    public function overallAppeal()
-    {
-        return $this->renderCategory('Categories/TopFiveFinalist/OverallAppeal', 'overall_appeal');
     }
 }

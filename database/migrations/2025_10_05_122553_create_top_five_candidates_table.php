@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('top_five_candidates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('candidate_id')->constrained('candidates')->onDelete('cascade');
+            $table->decimal('accumulative', 5, 2)->nullable();
             $table->timestamps();
         });
     }

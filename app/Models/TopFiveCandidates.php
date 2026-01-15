@@ -12,6 +12,7 @@ class TopFiveCandidates extends Model
 
     protected $fillable = [
         'candidate_id',
+        'accumulative',
     ];
 
     public function candidate()

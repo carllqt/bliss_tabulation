@@ -48,6 +48,17 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        {candidates.length === 0 && (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={judgeOrder.length + 4}
+                                    className="text-center"
+                                >
+                                    No results available
+                                </TableCell>
+                            </TableRow>
+                        )}
+
                         {candidates.map((c) => (
                             <TableRow
                                 key={c.candidate.id}
@@ -60,6 +71,7 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                                 <TableCell>
                                     {c.candidate.candidate_number}
                                 </TableCell>
+
                                 <TableCell>
                                     <div className="flex items-center gap-2">
                                         <img
@@ -80,6 +92,7 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                                         </span>
                                     </div>
                                 </TableCell>
+
                                 {judgeOrder.map((judge) => (
                                     <TableCell
                                         key={judge}
@@ -90,9 +103,11 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                                         )}
                                     </TableCell>
                                 ))}
+
                                 <TableCell className="text-center">
                                     {Number(c.total).toFixed(2)}
                                 </TableCell>
+
                                 <TableCell className="text-center">
                                     {c.rank}
                                 </TableCell>

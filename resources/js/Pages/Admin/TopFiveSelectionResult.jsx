@@ -8,26 +8,23 @@ import { HoverBorderGradient } from "@/Components/ui/hover-border-gradient";
 import { toast } from "sonner";
 
 const TopFiveSelectionResult = ({
-    categoryName = "Top Five Selection Results",
-    maleCandidates,
-    femaleCandidates,
+    categoryName,
+    candidates = [],
     categories,
 }) => {
     const handleSetTopFive = () => {
-        const maleTop5 = maleCandidates
-            .filter((c) => c.rank <= 5)
+        // get top 5 overall
+        const top5Ids = candidates
+            .sort((a, b) => {
+                if (a.rank !== b.rank) return a.rank - b.rank;
+                // tie breaker: higher total_scores wins
+                return b.total_scores - a.total_scores;
+            })
+            .slice(0, 5)
             .map((c) => c.candidate.id);
 
-        const femaleTop5 = femaleCandidates
-            .filter((c) => c.rank <= 5)
-            .map((c) => c.candidate.id);
-
-        const allTop5 = [...maleTop5, ...femaleTop5];
-
-        if (maleTop5.length !== 5 || femaleTop5.length !== 5) {
-            toast.error(
-                "There must be exactly 5 male and 5 female top-ranked candidates."
-            );
+        if (top5Ids.length !== 5) {
+            toast.error("There must be exactly 5 top-ranked candidates.");
             return;
         }
 
@@ -35,12 +32,12 @@ const TopFiveSelectionResult = ({
 
         router.post(
             route("topFive.set"),
-            { candidate_ids: allTop5 },
+            { candidate_ids: top5Ids },
             {
                 preserveScroll: true,
                 onSuccess: () => {
                     toast.dismiss(loadingToastId);
-                    toast.success("Top 5 Male & Female saved successfully!");
+                    toast.success("Top 5 saved successfully!");
                 },
                 onError: () => {
                     toast.dismiss(loadingToastId);
@@ -56,20 +53,10 @@ const TopFiveSelectionResult = ({
                 {categoryName}
             </h2>
 
-            {/* Male Table */}
             <TopFiveSelectionTable
-                title="Male Candidates"
-                candidates={maleCandidates}
+                candidates={candidates}
                 categories={categories}
-                category={`${categoryName} Male Results`}
-            />
-
-            {/* Female Table */}
-            <TopFiveSelectionTable
-                title="Female Candidates"
-                candidates={femaleCandidates}
-                categories={categories}
-                category={`${categoryName} Female Results`}
+                category={categoryName}
             />
 
             <div className="flex justify-center mb-10">
@@ -79,7 +66,7 @@ const TopFiveSelectionResult = ({
                     className="dark:bg-neutral-800 bg-white text-black dark:text-neutral-100 flex items-center space-x-2 px-12 py-1 text-lg font-semibold"
                     onClick={handleSetTopFive}
                 >
-                    <span>Set Top 5 (Male & Female)</span>
+                    <span>Set Top 5</span>
                 </HoverBorderGradient>
             </div>
         </PageLayout>

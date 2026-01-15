@@ -19,9 +19,8 @@ class TopFiveFinalistScoreRepository
 
         // Recalculate total score
         $record->total_score =
-            ($record->face_and_figure ?? 0) +
-            ($record->delivery ?? 0) +
-            ($record->overall_appeal ?? 0);
+            ($record->accumulative ?? 0) +
+            ($record->final_q_and_a ?? 0);
 
         $record->save();
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Repositories\TopFiveSelectionScoreRepository;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class TopFiveSelectionScoreController extends Controller
 {
@@ -26,15 +25,20 @@ class TopFiveSelectionScoreController extends Controller
         $scores = $request->input('scores');
 
         foreach ($scores as $candidateId => $scoreValue) {
-            $this->scores->updateOrCreateScore($judgeId, $candidateId, $category, $scoreValue);
+            $this->scores->updateOrCreateScore(
+                $judgeId,
+                $candidateId,
+                $category,
+                $scoreValue
+            );
         }
 
         return back();
     }
 
-    public function production_number_store(Request $request)
+    public function creative_attire_store(Request $request)
     {
-        return $this->storeScores($request, 'production_number');
+        return $this->storeScores($request, 'creative_attire');
     }
 
     public function casual_wear_store(Request $request)
@@ -47,8 +51,23 @@ class TopFiveSelectionScoreController extends Controller
         return $this->storeScores($request, 'swim_wear');
     }
 
-    public function formal_wear_store(Request $request)
+    public function talent_store(Request $request)
     {
-        return $this->storeScores($request, 'formal_wear');
+        return $this->storeScores($request, 'talent');
+    }
+
+    public function gown_store(Request $request)
+    {
+        return $this->storeScores($request, 'gown');
+    }
+
+    public function q_and_a_store(Request $request)
+    {
+        return $this->storeScores($request, 'q_and_a');
+    }
+
+    public function beauty_store(Request $request)
+    {
+        return $this->storeScores($request, 'beauty');
     }
 }

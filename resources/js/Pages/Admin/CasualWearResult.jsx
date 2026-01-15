@@ -5,28 +5,20 @@ import PageLayout from "@/Layouts/PageLayout";
 import ResultTable from "./Partials/ResultTable";
 
 const CasualWearResult = ({
-    categoryName = "Casual Wear",
-    maleCandidates = [],
-    femaleCandidates = [],
+    categoryName,
+    candidates = [],
     judgeOrder = [],
 }) => {
     return (
         <PageLayout>
-            <h2 className="text-white text-xl font-bold mb-4 justify-center flex mt-6">
+            <h2 className="text-white text-xl font-bold mb-6 flex justify-center mt-6">
                 {categoryName} Results
             </h2>
 
             <ResultTable
-                title="Male Candidates"
-                candidates={maleCandidates}
+                candidates={candidates}
                 judgeOrder={judgeOrder}
-                category={`${categoryName} Male Results`}
-            />
-            <ResultTable
-                title="Female Candidates"
-                candidates={femaleCandidates}
-                judgeOrder={judgeOrder}
-                category={`${categoryName} Female Results`}
+                category={`${categoryName} Results`}
             />
         </PageLayout>
     );

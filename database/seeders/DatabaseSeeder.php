@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-public function run(): void
+    public function run(): void
     {
         // Create 1 admin
         User::factory()->create([
@@ -30,8 +30,5 @@ public function run(): void
         )->create();
 
         $this->call(CandidateSeeder::class);
-
-        $this->call(TopFiveSelectionScoreSeeder::class);
     }
-
 }
