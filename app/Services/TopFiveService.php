@@ -68,32 +68,42 @@ class TopFiveService
         return $this->assignRanking($processed);
     }
 
-    /**
-     * Get TOTAL results (NO GENDER)
-     */
-    /**
-     * Get total results including accumulative and final Q&A
-     */
     public function getTotalResults(): array
     {
-        $candidatesList = TopFiveCandidates::with('candidate')->get();
+        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5'];
 
-        $processed = $candidatesList->map(function ($item, $index) {
-            return [
-                'candidate'        => $item->candidate,
-                'scores'           => [
-                    'accumulative'  => $item->accumulative,
-                    'final_q_and_a' => 0, // can fill later if needed
+        $candidates = TopFiveCandidates::with('candidate')->get();
+        $scores = TopFiveScore::with('judge')->get();
+
+        $processed = [];
+
+        foreach ($candidates as $index => $item) {
+            $finalQAScores = array_fill_keys($judgeOrder, 0);
+
+            foreach ($scores->where('top_five_id', $item->id) as $score) {
+                if (in_array($score->judge->name, $judgeOrder)) {
+                    $finalQAScores[$score->judge->name] =
+                        $score->final_q_and_a ?? 0;
+                }
+            }
+
+            $finalQATotal = array_sum($finalQAScores);
+
+            $processed[] = [
+                'candidate' => $item->candidate,
+                'scores' => [
+                    'accumulative'  => round($item->accumulative, 2),
+                    'final_q_and_a' => round($finalQATotal, 2),
                 ],
-                'total'            => round($item->accumulative, 2), // only accumulative for now
-                'rank'             => 0,
+                'total' => round($item->accumulative + $finalQATotal, 2),
+                'rank' => 0,
                 'candidate_number' => $index + 1,
             ];
-        })->toArray();
+        }
 
         return [
             'candidates' => $this->assignRanking($processed),
-            'judgeOrder' => [],
+            'judgeOrder' => [], // no judge columns here
         ];
     }
 
