@@ -53,15 +53,6 @@ const CandidateGrid = ({
                             <h3 className="font-bold text-white truncate w-full px-2">
                                 {candidate.first_name} {candidate.last_name}
                             </h3>
-
-                            {candidate.course && (
-                                <p
-                                    className="text-sm text-gray-300 mt-1 whitespace-nowrap overflow-hidden text-ellipsis w-full px-2"
-                                    title={candidate.course}
-                                >
-                                    {candidate.course}
-                                </p>
-                            )}
                         </div>
 
                         <ScoreInput
