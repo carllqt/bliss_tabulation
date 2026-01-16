@@ -12,15 +12,17 @@ import {
 import { cn } from "@/lib/utils";
 import { router } from "@inertiajs/react";
 import {
-    ListChecks,
+    Palette,
     Shirt,
-    Droplet,
-    Award,
-    User,
-    Package,
+    Waves,
     Star,
-    LogOut,
+    Sparkles,
+    MessageCircleQuestion,
+    Heart,
     Trophy,
+    Package,
+    LogOut,
+    Medal,
 } from "lucide-react";
 
 export default function SidebarMain({ children }) {
@@ -44,7 +46,7 @@ export default function SidebarMain({ children }) {
             ? [
                   {
                       label: "Creative Attire",
-                      icon: <ListChecks />,
+                      icon: <Palette />,
                       route: "admin.creative_attire",
                   },
                   {
@@ -54,27 +56,27 @@ export default function SidebarMain({ children }) {
                   },
                   {
                       label: "Swim Wear",
-                      icon: <Droplet />,
+                      icon: <Waves />,
                       route: "admin.swim_wear",
                   },
                   {
                       label: "Talent",
-                      icon: <Award />,
+                      icon: <Star />,
                       route: "admin.talent",
                   },
                   {
                       label: "Gown",
-                      icon: <Award />,
+                      icon: <Sparkles />,
                       route: "admin.gown",
                   },
                   {
                       label: "Q & A",
-                      icon: <User />,
+                      icon: <MessageCircleQuestion />,
                       route: "admin.q_and_a",
                   },
                   {
                       label: "Beauty",
-                      icon: <Award />,
+                      icon: <Heart />,
                       route: "admin.beauty",
                   },
                   {
@@ -86,7 +88,7 @@ export default function SidebarMain({ children }) {
             : [
                   {
                       label: "Creative Attire",
-                      icon: <ListChecks />,
+                      icon: <Palette />,
                       route: "creative_attire",
                   },
                   {
@@ -96,27 +98,27 @@ export default function SidebarMain({ children }) {
                   },
                   {
                       label: "Swim Wear",
-                      icon: <Droplet />,
+                      icon: <Waves />,
                       route: "swim_wear",
                   },
                   {
                       label: "Talent",
-                      icon: <Award />,
+                      icon: <Star />,
                       route: "talent",
                   },
                   {
                       label: "Gown",
-                      icon: <Award />,
+                      icon: <Sparkles />,
                       route: "gown",
                   },
                   {
                       label: "Q & A",
-                      icon: <Award />,
+                      icon: <MessageCircleQuestion />,
                       route: "q_and_a",
                   },
                   {
                       label: "Beauty",
-                      icon: <Award />,
+                      icon: <Heart />,
                       route: "beauty",
                   },
               ];
@@ -125,13 +127,8 @@ export default function SidebarMain({ children }) {
         user?.role === "admin"
             ? [
                   {
-                      label: "Accumulative Scoring",
-                      icon: <User />,
-                      route: "admin.acumulative_scoring",
-                  },
-                  {
                       label: "Final Q & A",
-                      icon: <Package />,
+                      icon: <Medal />,
                       route: "admin.final_q_and_a",
                   },
                   {
@@ -143,7 +140,7 @@ export default function SidebarMain({ children }) {
             : [
                   {
                       label: "Final Q & A",
-                      icon: <Package />,
+                      icon: <Medal />,
                       route: "final_q_and_a",
                   },
               ];

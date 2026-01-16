@@ -126,7 +126,7 @@ class TopFiveSelectionService
             }
 
             $total = array_sum($categoryTotals);
-            $accumulative = $total * 0.5; // 50%
+            $accumulative = $total;
 
             $topFiveAccumulative[] = [
                 'candidate'   => $candidate,

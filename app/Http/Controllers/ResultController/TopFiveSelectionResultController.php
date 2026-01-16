@@ -112,6 +112,7 @@ class TopFiveSelectionResultController extends Controller
 
         foreach ($topFive as $data) {
             TopFiveCandidates::create([
+                'id' => $data['candidate']->id,
                 'candidate_id' => $data['candidate']->id,
                 'accumulative' => $data['accumulative'],
             ]);

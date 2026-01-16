@@ -11,6 +11,7 @@ class TopFiveCandidates extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'candidate_id',
         'accumulative',
     ];
